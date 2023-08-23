@@ -1,6 +1,9 @@
-﻿using Business.Abstract;
+﻿using Azure;
+using Business.Abstract;
 using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +21,22 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
+        public void Add(Car car)
+        {
+            if (car.Description.Length < 2 || car.DailyPrice < 0)
+            {
+                throw new DuplicateWaitObjectException("You cannot add this car");
+            }
+            _carDal.Add(car);
+        }
         public List<Car> GetAll()
         {
             return _carDal.GetAll();
+        }
+
+        public List<CarDetailDto> GetCarDetail()
+        {
+            return _carDal.GetCarDetail();
         }
 
         public List<Car> GetCarsByBrandId(int id)
